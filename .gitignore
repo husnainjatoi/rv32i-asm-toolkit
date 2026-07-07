@@ -1,0 +1,20 @@
+# Editor / Temporary Files
+*~
+*.swp
+*.tmp
+
+# VS Code workspace settings
+.vscode/
+
+# Operating System Files
+# macOS
+.DS_Store
+# Windows
+Thumbs.db
+desktop.ini
+
+# Build Artifacts & Logs (Just in case)
+*.o
+*.out
+*.elf
+*.log
