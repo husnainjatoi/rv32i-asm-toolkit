@@ -160,8 +160,8 @@ find_max:
         mv t1, t2 # Swap
     
     skip_max:
-        addi t0, t0, 1
-        addi a0, a0, 4
+        addi t0, t0, 1 # Increment loop counter
+        addi a0, a0, 4 # Increment address of array
         j max_loop
     
     exit_max:
@@ -180,8 +180,8 @@ find_min:
         mv t1, t2 # Swap
     
     skip_min:
-        addi t0, t0, 1
-        addi a0, a0, 4
+        addi t0, t0, 1 # Increment loop counter
+        addi a0, a0, 4 # Increment address of array
         j min_loop
     
     exit_min:
@@ -196,11 +196,11 @@ count_neg:
         beq t0, a1, exit_count
         lw t2, 0(a0)
         bgez t2, skip_count
-        addi t1, t1, 1
+        addi t1, t1, 1 # Count += 1
         
     skip_count:
-        addi t0, t0, 1
-        addi a0, a0, 4
+        addi t0, t0, 1 # Increment loop counter
+        addi a0, a0, 4 # Increment address of array
         j count_loop
         
     exit_count:
