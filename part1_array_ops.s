@@ -10,13 +10,13 @@
     str_neg: .string "Negative Count: "
     str_newline: .string "\n"
     str_space: .string " "
+    str_sorted: .string "Sorted array: "
 
 .text
 .globl main
 main:
-
     # Saving return address and callee saved registers
-	addi sp, sp, -16
+    addi sp, sp, -16
     sw ra, 12(sp)
     sw s0, 8(sp)
     sw s1, 4(sp)
@@ -26,98 +26,39 @@ main:
     la t0, array_size
     lw s0, 0(t0)
     
-    # sum_array FUNCTION SETUP AND CALL
-    # Initializing arguments for function call
-    mv a1, s0
-    mv a0, s1
-    
+    # 1. SUM
+    mv a0, s1         
+    mv a1, s0           
     call sum_array
-    mv t1, a0 # Saving the sum result in t1
+    la a1, str_sum       
+    call print_result     
     
-    # Printing "Sum: " string
-    la a1, str_sum
-    li a0, 4
-    ecall
-    
-    # Printing the sum
-    mv a1, t1
-    li a0, 1
-    ecall
-    
-    # Printing newline
-    la a1, str_newline
-    li a0, 4
-    ecall
-    
-    # find_max FUNCTION SETUP AND CALL
-    # Initializing arguments for function call
-    mv a1, s0
+    # 2. MAX
     mv a0, s1
-    
+    mv a1, s0
     call find_max
-    mv t2, a0 # Saving the max result in t2
+    la a1, str_max        
+    call print_result
     
-    # Printing "Max: " string
-    la a1, str_max
-    li a0, 4
-    ecall
-    
-    # Printing the max number
-    mv a1, t2
-    li a0, 1
-    ecall
-    
-    # Printing newline
-    la a1, str_newline
-    li a0, 4
-    ecall
-    
-    # find_min FUNCTION SETUP AND CALL
-    # Initializing arguments for function call
-    mv a1, s0
+    # 3. MIN
     mv a0, s1
-    
+    mv a1, s0
     call find_min
-    mv t3, a0 # Saving the max result in t3
+    la a1, str_min        
+    call print_result
     
-    # Printing "Min: " string
-    la a1, str_min
-    li a0, 4
-    ecall
-    
-    # Printing the min number
-    mv a1, t3
-    li a0, 1
-    ecall
-    
-    # Printing newline
-    la a1, str_newline
-    li a0, 4
-    ecall
-    
-    # count_neg FUNCTION SETUP AND CALL
-    # Initializing arguments for function call
-    mv a1, s0
+    # 4. NEGATIVE COUNT
     mv a0, s1
-    
+    mv a1, s0
     call count_neg
-    mv t4, a0 # Saving the count in t4
+    la a1, str_neg        
+    call print_result
     
-    # Printing "Negative Count: " string
-    la a1, str_neg
+    
+    la a1, str_sorted
     li a0, 4
     ecall
     
-    # Printing the count
-    mv a1, t4
-    li a0, 1
-    ecall
-    
-    # Printing newline
-    la a1, str_newline
-    li a0, 4
-    ecall
-
     # Intializing arguments for selection_sort call
     la a0, my_array
     la t2, array_size
@@ -242,6 +183,25 @@ count_neg:
         mv a0, t1
         ret
         
+print_result: 
+    mv t0, a0 # Temporarily save the integer so we don't overwrite it
+    
+    # Print the string label
+    li a0, 4
+    ecall
+    
+    # Print the integer
+    mv a1, t0
+    li a0, 1
+    ecall
+    
+    # Print a newline
+    la a1, str_newline
+    li a0, 4
+    ecall
+    
+    ret
+        
 selection_sort:
     # Storing callee saved registers
     addi sp, sp, -16
@@ -270,7 +230,7 @@ selection_sort:
             add t5, t5, a0
             lw t6, 0(t5) # t6 = array[minIdx]
             
-            ble t6, t4, skip_update
+            blt t6, t4, skip_update
             mv t2, t1 # update minIdx
             
             skip_update:

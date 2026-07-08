@@ -15,7 +15,7 @@
 .globl main
 
 main:
-    # Storing original registers to stack
+    # Storing original registers to stack perfectly following calling convention
     addi sp, sp, -32
     sw ra, 28(sp)
     sw s0, 24(sp)
@@ -31,71 +31,50 @@ main:
     lw s1, 0(t1)
     
     li s2, 0 # Loop counter i
+    
     loop:
-        beq s2, s1, exit # Loop terminating condition
-        lw s0, 0(s3) # Load instruction[i]
+        beq s2, s1, exit      # Loop terminating condition
+        lw s0, 0(s3)          # Load instruction[i]
         
-        andi t0, s0, 0x7F # Extracting opcode
-        
-        # Extracting rd
-        srli t1, s0, 7
-        andi t1, t1, 0x1F
-        
-        # Extracting funct3
-        srli t2, s0, 12
-        andi t2, t2, 0x07
-        
-        # Extracting rs1
-        srli t3, s0, 15
-        andi t3, t3, 0x1F
-        
-        # Printing Sequence
-        
-        li a0, 4
+        # 1. Print full instruction (in Hex)
         la a1, str_inst
-        ecall # Printing "Instruction: "
+        mv a2, s0             
+        li a3, 34             # Syscall 34: Print Hex
+        call print_field
         
-        li a0, 34
-        mv a1, s0
-        ecall # Printing instruction
-        
-        li a0, 4
+        # 2. Extract and Print Opcode (Bits 0-6)
+        andi a2, s0, 0x7F    
         la a1, str_op
-        ecall # Printing " | opcode: "
+        li a3, 1              # Syscall 1: Print Integer
+        call print_field
         
-        li a0, 1
-        mv a1, t0
-        ecall # Printing opcode
-        
-        li a0, 4
+        # 3. Extract and Print rd (Bits 7-11)
+        srli a2, s0, 7
+        andi a2, a2, 0x1F
         la a1, str_rd
-        ecall # Printing " | rd: x"
+        li a3, 1
+        call print_field
         
-        li a0, 1
-        mv a1, t1
-        ecall # Printing rd
-        
-        li a0, 4
+        # 4. Extract and Print funct3 (Bits 12-14)
+        srli a2, s0, 12
+        andi a2, a2, 0x07
         la a1, str_f3
-        ecall # Printing " | funct3: "
+        li a3, 1
+        call print_field
         
-        li a0, 1
-        mv a1, t2
-        ecall # Printing funct3
-        
-        li a0, 4
+        # 5. Extract and Print rs1 (Bits 15-19)
+        srli a2, s0, 15
+        andi a2, a2, 0x1F
         la a1, str_rs1
-        ecall # Printing " | rs1: x"
+        li a3, 1
+        call print_field
         
-        li a0, 1
-        mv a1, t3
-        ecall # Printing rs1
-        
-        li a0, 4
+        # 6. Print newline for the next instruction
         la a1, str_newline
-        ecall # Printing newline
+        li a0, 4
+        ecall
         
-        # Incrementing loop counter and address
+        # Incrementing loop counter and address pointer
         addi s2, s2, 1
         addi s3, s3, 4
         
@@ -116,3 +95,15 @@ exit:
     # Cleanly Exiting program
     li a0, 10
     ecall
+
+print_field:
+    # 1. Print the string label
+    li a0, 4
+    ecall
+    
+    # 2. Print the extracted value
+    mv a1, a2
+    mv a0, a3
+    ecall
+    
+    ret
