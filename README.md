@@ -1,4 +1,4 @@
-# RISC-V Assembly Grand Challenge
+# RV32I ISA Implementation & Toolkit
 
 ![Language](https://img.shields.io/badge/Language-RISC--V_Assembly-blue)
 [![Status](https://img.shields.io/badge/Status-Completed-success)]()
