@@ -4,9 +4,6 @@
 [![Status](https://img.shields.io/badge/Status-Completed-success)]()
 ![Environment](https://img.shields.io/badge/Environment-Venus_Simulator-orange)
 
-**Author:** Husnain Jatoi  
-**Project:** Maktab-e-Digital Systems Lab Module 3 Capstone 
-
 ## Project Description
 A comprehensive suite of bare-metal RISC-V assembly programs engineered to demonstrate low-level architectural control, strict calling convention compliance, and hardware-software interfacing. Developed as the capstone for MEDS Module 3, this project bridges high-level programming logic with execution at the ISA level. It features array manipulation routines, deeply recursive algorithms with complete stack frame management, and a custom assembly-native instruction decoder that parses hexadecimal machine code back into human-readable mnemonics.
 
